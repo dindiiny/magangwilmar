@@ -58,13 +58,7 @@ Route::get('/check-storage', function() {
 });
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/laboratorium', [LabController::class, 'index'])->name('laboratorium');
-<<<<<<< HEAD
-Route::get('/flow-proses', [FlowController::class, 'index'])->name('flow');
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/dokumen-laporan', [DocumentController::class, 'index'])->name('documents.index');
-});
-=======
->>>>>>> 106af9c438f0a80ed8e942447f859b9b5880bdbf
+ 
 
 Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/flow-proses', [FlowController::class, 'index'])->name('flow');

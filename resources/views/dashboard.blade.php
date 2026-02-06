@@ -101,60 +101,17 @@
                     <i class="fas fa-chevron-right text-gray-400 group-hover:text-emerald-600 transition"></i>
                 </a>
 
-<<<<<<< HEAD
-                <a href="{{ route('flow') }}" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition block">
-                    <div class="flex items-center justify-between">
-                        <div>
-                            <h4 class="font-bold text-gray-800 group-hover:text-emerald-600 transition">Kelola Flow Proses</h4>
-                            <p class="text-sm text-gray-500">Edit Alur Produksi</p>
-                        </div>
-                        <i class="fas fa-chevron-right text-gray-400 group-hover:text-emerald-600 transition"></i>
-=======
                 @if(Auth::user()->is_admin)
                 <a href="{{ route('flow') }}" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition flex items-center justify-between group">
                     <div>
                         <h4 class="font-bold text-gray-800 group-hover:text-emerald-600 transition">Kelola Flow Proses</h4>
                         <p class="text-sm text-gray-500">Edit Alur Produksi</p>
->>>>>>> 106af9c438f0a80ed8e942447f859b9b5880bdbf
                     </div>
-                    @if(Auth::user()->is_admin)
-                        <div class="mt-4 flex items-center gap-2">
-                            <a href="{{ route('flow') }}#add" class="px-3 py-2 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-700">
-                                <i class="fas fa-plus mr-1"></i> Tambah
-                            </a>
-                            <a href="{{ route('flow') }}" class="px-3 py-2 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
-                                <i class="fas fa-edit mr-1"></i> Edit
-                            </a>
-                            <a href="{{ route('flow') }}" class="px-3 py-2 text-xs rounded bg-red-600 text-white hover:bg-red-700">
-                                <i class="fas fa-trash mr-1"></i> Hapus
-                            </a>
-                        </div>
-                    @endif
+                    <i class="fas fa-chevron-right text-gray-400 group-hover:text-emerald-600 transition"></i>
                 </a>
+                @endif
 
-<<<<<<< HEAD
                 @if(Auth::user()->is_admin)
-                    <a href="{{ route('documents.index') }}" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition block">
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <h4 class="font-bold text-gray-800 group-hover:text-emerald-600 transition">Kelola Dokumen</h4>
-                                <p class="text-sm text-gray-500">Upload COA, MSDS, dll</p>
-                            </div>
-                            <i class="fas fa-chevron-right text-gray-400 group-hover:text-emerald-600 transition"></i>
-                        </div>
-                        <div class="mt-4 flex items-center gap-2">
-                            <a href="{{ route('documents.index') }}#add" class="px-3 py-2 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-700">
-                                <i class="fas fa-plus mr-1"></i> Tambah
-                            </a>
-                            <a href="{{ route('documents.index') }}" class="px-3 py-2 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
-                                <i class="fas fa-edit mr-1"></i> Edit
-                            </a>
-                            <a href="{{ route('documents.index') }}" class="px-3 py-2 text-xs rounded bg-red-600 text-white hover:bg-red-700">
-                                <i class="fas fa-trash mr-1"></i> Hapus
-                            </a>
-                        </div>
-                    </a>
-=======
                 <a href="{{ route('documents.index') }}" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition flex items-center justify-between group">
                     <div>
                         <h4 class="font-bold text-gray-800 group-hover:text-emerald-600 transition">Kelola Dokumen</h4>
@@ -162,7 +119,6 @@
                     </div>
                     <i class="fas fa-chevron-right text-gray-400 group-hover:text-emerald-600 transition"></i>
                 </a>
->>>>>>> 106af9c438f0a80ed8e942447f859b9b5880bdbf
                 @endif
             </div>
         </div>
