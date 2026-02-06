@@ -4,10 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\ProcessFlow;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class FlowController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware(['auth', 'admin'])->only([
+            'storeFlow',
+            'updateFlow',
+            'destroyFlow',
+        ]);
+    }
+
     public function index()
     {
         $flows = ProcessFlow::orderBy('order')->get();

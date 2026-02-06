@@ -62,12 +62,12 @@
                     <i class="fas fa-flask w-6 text-center mr-3"></i>
                     <span class="font-medium">Laboratorium</span>
                 </a>
+                <a href="{{ route('flow') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('flow') ? 'sidebar-active' : '' }}">
+                    <i class="fas fa-diagram-project w-6 text-center mr-3"></i>
+                    <span class="font-medium">Flow Proses</span>
+                </a>
                 @auth
                     @if(Auth::user()->is_admin)
-                        <a href="{{ route('flow') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('flow') ? 'sidebar-active' : '' }}">
-                            <i class="fas fa-diagram-project w-6 text-center mr-3"></i>
-                            <span class="font-medium">Flow Proses</span>
-                        </a>
                         <a href="{{ route('documents.index') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('documents.index') ? 'sidebar-active' : '' }}">
                             <i class="fas fa-file-alt w-6 text-center mr-3"></i>
                             <span class="font-medium">Laporan & Dokumen</span>
@@ -76,41 +76,7 @@
                 @endauth
             </nav>
             
-            @auth
-                @if(Auth::user()->is_admin)
-                    <div class="px-6 pb-6 space-y-4 border-t border-emerald-800 bg-emerald-950">
-                        <div class="text-xs uppercase tracking-widest text-emerald-400">Aksi Admin</div>
-                        <div class="space-y-3">
-                            <div class="text-sm font-semibold text-white">Dokumen</div>
-                            <div class="flex flex-wrap gap-2">
-                                <a href="{{ route('documents.index') }}#add" class="px-3 py-2 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-700">
-                                    <i class="fas fa-plus mr-1"></i> Tambah
-                                </a>
-                                <a href="{{ route('documents.index') }}" class="px-3 py-2 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
-                                    <i class="fas fa-edit mr-1"></i> Edit
-                                </a>
-                                <a href="{{ route('documents.index') }}" class="px-3 py-2 text-xs rounded bg-red-600 text-white hover:bg-red-700">
-                                    <i class="fas fa-trash mr-1"></i> Hapus
-                                </a>
-                            </div>
-                        </div>
-                        <div class="space-y-3">
-                            <div class="text-sm font-semibold text-white">Flow Proses</div>
-                            <div class="flex flex-wrap gap-2">
-                                <a href="{{ route('flow') }}#add" class="px-3 py-2 text-xs rounded bg-emerald-600 text-white hover:bg-emerald-700">
-                                    <i class="fas fa-plus mr-1"></i> Tambah
-                                </a>
-                                <a href="{{ route('flow') }}" class="px-3 py-2 text-xs rounded bg-yellow-500 text-white hover:bg-yellow-600">
-                                    <i class="fas fa-edit mr-1"></i> Edit
-                                </a>
-                                <a href="{{ route('flow') }}" class="px-3 py-2 text-xs rounded bg-red-600 text-white hover:bg-red-700">
-                                    <i class="fas fa-trash mr-1"></i> Hapus
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-            @endauth
+            
             
             <!-- Auth Links -->
             <div class="p-4 border-t border-emerald-800 bg-emerald-950">

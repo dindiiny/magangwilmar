@@ -58,10 +58,9 @@ Route::get('/check-storage', function() {
 });
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/laboratorium', [LabController::class, 'index'])->name('laboratorium');
- 
+Route::get('/flow-proses', [FlowController::class, 'index'])->name('flow');
 
 Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/flow-proses', [FlowController::class, 'index'])->name('flow');
     Route::get('/dokumen-laporan', [DocumentController::class, 'index'])->name('documents.index');
 
     // Admin Resources (CRUD)
