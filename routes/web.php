@@ -96,9 +96,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Seven S (Admin only)
     Route::post('/seven-s', [LabCtrl::class, 'storeSevenS'])->name('sevens.store');
+    Route::delete('/seven-s', [LabCtrl::class, 'destroySevenS'])->name('sevens.destroy');
 
     // House Keeping (Admin only)
     Route::post('/house-keeping', [LabCtrl::class, 'storeHouseKeeping'])->name('housekeeping.store');
+    Route::delete('/house-keeping/{id}', [LabCtrl::class, 'destroyHouseKeeping'])->name('housekeeping.destroy');
 
     // Process Flows (Admin only)
     Route::post('/process-flows', [FlowController::class, 'storeFlow'])->name('flow.store');

@@ -22,5 +22,21 @@
                 {{ $slot }}
             </div>
         </div>
+
+        <script>
+            document.addEventListener('submit', function (event) {
+                var form = event.target;
+                if (!form || !form.querySelector) return;
+                var emailInput = form.querySelector('input[type="email"][name="email"]');
+                if (!emailInput) return;
+                var value = emailInput.value || '';
+                var pattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!pattern.test(value)) {
+                    event.preventDefault();
+                    alert('Mohon masukkan alamat email yang valid.');
+                    emailInput.focus();
+                }
+            });
+        </script>
     </body>
 </html>

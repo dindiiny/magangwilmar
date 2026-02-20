@@ -46,7 +46,7 @@ class LabController extends Controller
             'name' => 'required|string|max:255',
             'category' => 'required|in:instrument,glassware',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $data = $request->only(['name', 'category', 'description']);
@@ -66,7 +66,7 @@ class LabController extends Controller
             'name' => 'required|string|max:255',
             'category' => 'required|in:instrument,glassware',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $equipment = LabEquipment::findOrFail($id);
@@ -101,7 +101,7 @@ class LabController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'required|image|max:2048',
+            'image' => 'required|image|max:5120',
         ]);
 
         $data = $request->only(['name', 'description']);
@@ -120,7 +120,7 @@ class LabController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'image' => 'nullable|image|max:2048',
+            'image' => 'nullable|image|max:5120',
         ]);
 
         $product = Product::findOrFail($id);
@@ -187,8 +187,8 @@ class LabController extends Controller
     {
         $request->validate([
             'progress_percent' => 'nullable|integer|min:0|max:100',
-            'before_image' => 'nullable|image|max:4096',
-            'after_image' => 'nullable|image|max:4096',
+            'before_image' => 'nullable|image|max:5120',
+            'after_image' => 'nullable|image|max:5120',
             'report_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
             'seiri' => 'nullable|boolean',
             'seiton' => 'nullable|boolean',
@@ -258,6 +258,25 @@ class LabController extends Controller
         return redirect()->route('sevens')->with('success', 'Data 7S berhasil diperbarui.');
     }
 
+    public function destroySevenS()
+    {
+        $sevenS = SevenS::first();
+        if ($sevenS) {
+            if ($sevenS->before_image) {
+                Storage::disk('public')->delete($sevenS->before_image);
+            }
+            if ($sevenS->after_image) {
+                Storage::disk('public')->delete($sevenS->after_image);
+            }
+            if ($sevenS->report_file) {
+                Storage::disk('public')->delete($sevenS->report_file);
+            }
+            $sevenS->delete();
+        }
+
+        return redirect()->route('sevens')->with('success', 'Data 7S berhasil dihapus.');
+    }
+
     public function storeHouseKeeping(Request $request)
     {
         $request->validate([
@@ -265,7 +284,7 @@ class LabController extends Controller
             'day_name' => 'required|string|max:20',
             'activities' => 'nullable|string',
             'areas' => 'nullable|string',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:51200',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:5120',
             'published' => 'nullable|boolean',
         ]);
 
@@ -292,5 +311,18 @@ class LabController extends Controller
         HouseKeeping::updateOrCreate($key, $data);
 
         return redirect()->route('housekeeping')->with('success', 'Data House Keeping berhasil diperbarui.');
+    }
+
+    public function destroyHouseKeeping($id)
+    {
+        $log = HouseKeeping::findOrFail($id);
+
+        if ($log->video_path) {
+            Storage::disk('public')->delete($log->video_path);
+        }
+
+        $log->delete();
+
+        return redirect()->route('housekeeping')->with('success', 'Log House Keeping berhasil dihapus.');
     }
 }

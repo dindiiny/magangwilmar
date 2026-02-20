@@ -107,7 +107,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Gambar Ilustrasi</label>
                                 <input type="file" name="image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="image/*">
-                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG. Max 2MB.</p>
+                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 
@@ -162,6 +162,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-2">Ganti Gambar (Opsional)</label>
                                 <input type="file" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                                <p class="text-xs text-gray-500 mt-1">Format: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 

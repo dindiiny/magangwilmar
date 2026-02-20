@@ -139,5 +139,20 @@
         </main>
     </div>
 
+    <script>
+        document.addEventListener('change', function (event) {
+            var input = event.target;
+            if (input.tagName !== 'INPUT') return;
+            if (input.type !== 'file') return;
+            if (!input.files || !input.files.length) return;
+            var file = input.files[0];
+            var maxBytes = 5 * 1024 * 1024;
+            if (file.size > maxBytes) {
+                alert('Ukuran file maksimal 5 MB. File yang dipilih terlalu besar.');
+                input.value = '';
+            }
+        });
+    </script>
+
 </body>
 </html>

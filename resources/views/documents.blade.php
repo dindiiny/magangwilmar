@@ -138,6 +138,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">File (PDF Wajib)</label>
                                 <input type="file" name="file" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept=".pdf">
+                                <p class="text-xs text-gray-500 mt-1">Format: PDF. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 
@@ -174,6 +175,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Ganti File (Opsional, PDF Wajib)</label>
                                 <input type="file" name="file" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept=".pdf">
+                                <p class="text-xs text-gray-500 mt-1">Format: PDF. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 

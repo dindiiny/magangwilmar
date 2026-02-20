@@ -42,6 +42,7 @@
             <div class="col-span-1">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Upload Foto</label>
                 <input type="file" name="image" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" required>
+                <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
             </div>
             <div class="col-span-2">
                 <label class="block text-gray-700 text-sm font-bold mb-2">Kegunaan / Deskripsi</label>

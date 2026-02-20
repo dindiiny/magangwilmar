@@ -104,8 +104,21 @@
                 </ul>
             </div>
 
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide mb-3">Laporan Implementasi</h2>
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Laporan Implementasi</h2>
+                @auth
+                    @if(Auth::user()->is_admin && $s)
+                        <form action="{{ route('sevens.destroy') }}" method="POST" onsubmit="return confirm('Hapus seluruh data 7S?');">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="text-xs text-red-600 hover:text-red-800 inline-flex items-center">
+                                <i class="fas fa-trash mr-1"></i> Hapus Data
+                            </button>
+                        </form>
+                    @endif
+                @endauth
+            </div>
                 <p class="text-sm text-gray-600 mb-3">
                     Ringkasan laporan pelaksanaan 7S, termasuk temuan, rekomendasi, dan tindak lanjut.
                 </p>
@@ -143,10 +156,12 @@
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-1">Foto Before</label>
                                     <input type="file" name="before_image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="image/*">
+                                    <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                                 </div>
                                 <div>
                                     <label class="block text-gray-700 text-sm font-bold mb-1">Foto After</label>
                                     <input type="file" name="after_image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="image/*">
+                                    <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                                 </div>
                             </div>
                             <div>
@@ -167,6 +182,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Upload File Laporan</label>
                                 <input type="file" name="report_file" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept=".pdf,.doc,.docx">
+                                <p class="text-xs text-gray-500 mt-1">Format: PDF, DOC, DOCX. Maksimal ukuran file 5 MB.</p>
                             </div>
                             <div class="flex items-center space-x-2">
                                 <input type="checkbox" name="published" value="1" {{ $s && $s->published ? 'checked' : '' }} class="rounded border-gray-300">

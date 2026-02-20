@@ -312,6 +312,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Foto Produk</label>
                                 <input type="file" name="image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="image/*">
+                                <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 
@@ -348,6 +349,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Ganti Gambar (Opsional)</label>
                                 <input type="file" name="image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500">
+                                <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 
@@ -382,6 +384,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Gambar</label>
                                 <input type="file" name="image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500">
+                                <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 
@@ -417,6 +420,7 @@
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Ganti Gambar (Opsional)</label>
                                 <input type="file" name="image" class="w-full border rounded px-3 py-2 focus:outline-emerald-500">
+                                <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
                             </div>
                         </div>
 

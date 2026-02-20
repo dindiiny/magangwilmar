@@ -23,7 +23,7 @@ class DocumentController extends Controller
             'title' => 'required|string|max:255',
             'type' => 'required|in:coa,incoming,msds',
             'description' => 'nullable|string',
-            'file' => 'nullable|mimes:pdf|max:10240', // 10MB max, PDF only
+            'file' => 'nullable|mimes:pdf|max:5120',
         ]);
 
         $data = $request->only(['title', 'type', 'description']);
@@ -43,7 +43,7 @@ class DocumentController extends Controller
             'title' => 'required|string|max:255',
             'type' => 'required|in:coa,incoming,msds',
             'description' => 'nullable|string',
-            'file' => 'nullable|mimes:pdf|max:10240',
+            'file' => 'nullable|mimes:pdf|max:5120',
         ]);
 
         $document = Document::findOrFail($id);

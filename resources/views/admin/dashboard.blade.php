@@ -39,6 +39,7 @@
             <div class="md:col-span-2">
                 <label class="block text-sm font-bold text-gray-700 mb-2">Gambar (opsional)</label>
                 <input type="file" name="image" class="w-full border rounded px-3 py-2">
+                <p class="text-xs text-gray-500 mt-1">Format gambar: JPG, PNG. Maksimal ukuran file 5 MB.</p>
             </div>
             <div class="md:col-span-2 flex justify-end">
                 <button class="bg-emerald-600 text-white px-6 py-2 rounded hover:bg-emerald-700">Simpan</button>
@@ -46,4 +47,3 @@
         </form>
     </div>
 @endsection
-
