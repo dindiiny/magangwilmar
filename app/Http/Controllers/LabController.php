@@ -14,9 +14,11 @@ class LabController extends Controller
 {
     public function houseKeeping()
     {
-        $houseKeeping = HouseKeeping::first();
+        $logs = HouseKeeping::orderBy('date', 'desc')
+            ->orderBy('day_name')
+            ->get();
 
-        return view('housekeeping', compact('houseKeeping'));
+        return view('housekeeping', compact('logs'));
     }
 
     public function sevenS()
@@ -259,31 +261,35 @@ class LabController extends Controller
     public function storeHouseKeeping(Request $request)
     {
         $request->validate([
-            'weekly_schedule' => 'nullable|string',
+            'date' => 'required|date',
+            'day_name' => 'required|string|max:20',
+            'activities' => 'nullable|string',
             'areas' => 'nullable|string',
             'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:51200',
             'published' => 'nullable|boolean',
         ]);
 
-        $houseKeeping = HouseKeeping::first();
+        $key = [
+            'date' => $request->input('date'),
+            'day_name' => $request->input('day_name'),
+        ];
+
         $data = [
-            'weekly_schedule' => $request->input('weekly_schedule'),
+            'activities' => $request->input('activities'),
             'areas' => $request->input('areas'),
             'published' => $request->input('published', true) ? true : false,
         ];
 
+        $existing = HouseKeeping::where($key)->first();
+
         if ($request->hasFile('video')) {
-            if ($houseKeeping && $houseKeeping->video_path) {
-                Storage::disk('public')->delete($houseKeeping->video_path);
+            if ($existing && $existing->video_path) {
+                Storage::disk('public')->delete($existing->video_path);
             }
             $data['video_path'] = $request->file('video')->store('housekeeping/videos', 'public');
         }
 
-        if ($houseKeeping) {
-            $houseKeeping->update($data);
-        } else {
-            HouseKeeping::create($data);
-        }
+        HouseKeeping::updateOrCreate($key, $data);
 
         return redirect()->route('housekeeping')->with('success', 'Data House Keeping berhasil diperbarui.');
     }

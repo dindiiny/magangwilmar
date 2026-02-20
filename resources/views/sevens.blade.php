@@ -120,12 +120,6 @@
                             <i class="fas fa-file-alt mr-2"></i> Unduh Laporan Implementasi
                         </a>
                     </div>
-                @elseif(!$s || (!$s->report && !$s->report_file))
-                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                        <li>Hasil audit area laboratorium.</li>
-                        <li>Rencana aksi perbaikan dan jadwal pelaksanaan.</li>
-                        <li>Catatan sebelum dan sesudah perbaikan.</li>
-                    </ul>
                 @endif
             </div>
         </div>

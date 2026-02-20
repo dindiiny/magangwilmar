@@ -20,68 +20,58 @@
             @endauth
         </div>
 
-        <div class="grid md:grid-cols-2 gap-6">
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-3">Schedule Cleaning Mingguan</h2>
-                <p class="text-sm text-gray-600 mb-3">
-                    Rencana kegiatan House Keeping per minggu untuk menjaga kebersihan dan kerapian laboratorium.
-                </p>
-                @php
-                    $hk = isset($houseKeeping) && $houseKeeping ? $houseKeeping : null;
-                @endphp
-                @if($hk && $hk->weekly_schedule)
-                    <div class="text-sm text-gray-800 whitespace-pre-line">
-                        {{ $hk->weekly_schedule }}
-                    </div>
-                @else
-                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                        <li>Senin: Pembersihan meja kerja, timbangan, dan alat ukur.</li>
-                        <li>Rabu: Pengecekan dan pembersihan area penyimpanan bahan kimia.</li>
-                        <li>Jumat: General cleaning area laboratorium dan pemeriksaan alat.</li>
-                        <li>Minggu ke-1: Deep cleaning dan penataan ulang label.</li>
-                    </ul>
-                @endif
-            </div>
-
-            <div class="bg-white rounded-lg shadow p-6">
-                <h2 class="text-lg font-semibold text-gray-800 mb-3">Area Cleaning</h2>
-                <p class="text-sm text-gray-600 mb-3">
-                    Area-area yang menjadi fokus kegiatan cleaning dan house keeping.
-                </p>
-                @if($hk && $hk->areas)
-                    <div class="text-sm text-gray-800 whitespace-pre-line">
-                        {{ $hk->areas }}
-                    </div>
-                @else
-                    <ul class="list-disc list-inside text-sm text-gray-700 space-y-1">
-                        <li>Meja kerja analisa dan preparation.</li>
-                        <li>Area timbangan dan instrumen sensitif.</li>
-                        <li>Rak penyimpanan bahan kimia dan glassware.</li>
-                        <li>Area pembuangan limbah sementara.</li>
-                        <li>Koridor dan akses masuk laboratorium.</li>
-                    </ul>
-                @endif
-            </div>
-        </div>
-
         <div class="bg-white rounded-lg shadow p-6">
-            <h2 class="text-lg font-semibold text-gray-800 mb-3">Video House Keeping</h2>
+            <h2 class="text-lg font-semibold text-gray-800 mb-3">Riwayat House Keeping</h2>
             <p class="text-sm text-gray-600 mb-4">
-                Dokumentasi video kegiatan house keeping sebagai bukti pelaksanaan dan bahan edukasi.
+                Daftar kegiatan cleaning per hari beserta area dan dokumentasi videonya.
             </p>
-            @if($hk && $hk->video_path)
-                <div class="aspect-video w-full bg-black rounded-lg overflow-hidden">
-                    <video class="w-full h-full" controls>
-                        <source src="{{ Storage::disk('public')->url($hk->video_path) }}" type="video/mp4">
-                        Browser Anda tidak mendukung pemutaran video.
-                    </video>
-                </div>
-                <p class="text-xs text-gray-500 mt-2">
-                    Jika video tidak muncul, pastikan format file kompatibel (MP4 disarankan).
-                </p>
-            @else
+            @php
+                $logs = isset($logs) ? $logs : collect();
+            @endphp
+            @if($logs->isEmpty())
                 <div class="border border-dashed border-gray-300 rounded-lg p-6 text-center text-sm text-gray-500">
-                    Belum ada video House Keeping yang diunggah.
+                    Belum ada data House Keeping yang tersimpan.
+                </div>
+            @else
+                <div class="overflow-x-auto">
+                    <table class="min-w-full text-sm text-left text-gray-700">
+                        <thead>
+                            <tr class="border-b">
+                                <th class="py-2 pr-4">Tanggal</th>
+                                <th class="py-2 pr-4">Hari</th>
+                                <th class="py-2 pr-4">Area</th>
+                                <th class="py-2 pr-4">Kegiatan</th>
+                                <th class="py-2 pr-4">Video</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($logs as $log)
+                                <tr class="border-b align-top">
+                                    <td class="py-2 pr-4 whitespace-nowrap">
+                                        {{ \Carbon\Carbon::parse($log->date)->format('d-m-Y') }}
+                                    </td>
+                                    <td class="py-2 pr-4 whitespace-nowrap">
+                                        {{ $log->day_name }}
+                                    </td>
+                                    <td class="py-2 pr-4">
+                                        {{ $log->areas ?: '-' }}
+                                    </td>
+                                    <td class="py-2 pr-4">
+                                        {{ $log->activities ?: '-' }}
+                                    </td>
+                                    <td class="py-2 pr-4">
+                                        @if($log->video_path)
+                                            <a href="{{ Storage::disk('public')->url($log->video_path) }}" target="_blank" class="inline-flex items-center text-emerald-700 hover:text-emerald-900">
+                                                <i class="fas fa-play-circle mr-1"></i> Lihat Video
+                                            </a>
+                                        @else
+                                            -
+                                        @endif
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
             @endif
         </div>
@@ -94,31 +84,44 @@
                     <button onclick="document.getElementById('hkModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
-                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Kelola House Keeping</h3>
+                    <h3 class="text-2xl font-bold mb-4 text-gray-800">Tambah / Ubah Log House Keeping</h3>
                     <form action="{{ route('housekeeping.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="space-y-4">
                             <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-1">Schedule Cleaning Mingguan</label>
-                                <textarea name="weekly_schedule" rows="5" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Contoh:
-Senin: ...
-Rabu: ...
-Jumat: ...
-Minggu ke-1: ...">{{ $hk ? $hk->weekly_schedule : '' }}</textarea>
+                                <label class="block text-gray-700 text-sm font-bold mb-1">Tanggal</label>
+                                <input type="date" name="date" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" required>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-1">Hari</label>
+                                <select name="day_name" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" required>
+                                    <option value="">Pilih hari</option>
+                                    <option value="Senin">Senin</option>
+                                    <option value="Selasa">Selasa</option>
+                                    <option value="Rabu">Rabu</option>
+                                    <option value="Kamis">Kamis</option>
+                                    <option value="Jumat">Jumat</option>
+                                    <option value="Sabtu">Sabtu</option>
+                                    <option value="Minggu">Minggu</option>
+                                </select>
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Area Cleaning</label>
-                                <textarea name="areas" rows="4" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Daftar area yang dibersihkan">{{ $hk ? $hk->areas : '' }}</textarea>
+                                <textarea name="areas" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Area yang dibersihkan pada hari tersebut"></textarea>
                             </div>
                             <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-1">Video House Keeping</label>
+                                <label class="block text-gray-700 text-sm font-bold mb-1">Kegiatan House Keeping</label>
+                                <textarea name="activities" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Uraian kegiatan cleaning pada hari tersebut"></textarea>
+                            </div>
+                            <div>
+                                <label class="block text-gray-700 text-sm font-bold mb-1">Video House Keeping (Opsional)</label>
                                 <input type="file" name="video" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="video/*">
                                 <p class="text-xs text-gray-500 mt-1">
                                     Format disarankan: MP4. Maksimal 50 MB.
                                 </p>
                             </div>
                             <div class="flex items-center space-x-2">
-                                <input type="checkbox" name="published" value="1" {{ $hk && $hk->published ? 'checked' : '' }} class="rounded border-gray-300">
+                                <input type="checkbox" name="published" value="1" checked class="rounded border-gray-300">
                                 <span class="text-sm text-gray-700">Tampilkan ke publik</span>
                             </div>
                         </div>
@@ -132,4 +135,3 @@ Minggu ke-1: ...">{{ $hk ? $hk->weekly_schedule : '' }}</textarea>
         @endif
     @endauth
 @endsection
-

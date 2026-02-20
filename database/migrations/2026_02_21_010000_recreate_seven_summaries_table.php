@@ -21,6 +21,7 @@ return new class extends Migration
                 $table->boolean('shitsuke')->default(false);
                 $table->boolean('safety_spirit')->default(false);
                 $table->longText('report')->nullable();
+                $table->string('report_file')->nullable();
                 $table->boolean('published')->default(true);
                 $table->timestamps();
             });
@@ -32,3 +33,4 @@ return new class extends Migration
         Schema::dropIfExists('seven_summaries');
     }
 };
+
