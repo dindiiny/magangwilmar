@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\LabEquipment;
 use App\Models\Product;
 use App\Models\SOPPengujian;
+use App\Models\SevenS;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -16,8 +17,9 @@ class LabController extends Controller
         $glassware = LabEquipment::where('category', 'glassware')->get();
         $products = Product::all();
         $sops = SOPPengujian::all();
+        $sevenS = SevenS::first();
 
-        return view('laboratorium', compact('instruments', 'glassware', 'products', 'sops'));
+        return view('laboratorium', compact('instruments', 'glassware', 'products', 'sops', 'sevenS'));
     }
 
     // --- Equipment Methods ---
@@ -162,5 +164,80 @@ class LabController extends Controller
         $sop->delete();
 
         return redirect()->route('laboratorium')->with('success', 'SOP berhasil dihapus.');
+    }
+
+    public function storeSevenS(Request $request)
+    {
+        $request->validate([
+            'progress_percent' => 'nullable|integer|min:0|max:100',
+            'before_image' => 'nullable|image|max:4096',
+            'after_image' => 'nullable|image|max:4096',
+            'report_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+            'seiri' => 'nullable|boolean',
+            'seiton' => 'nullable|boolean',
+            'seiso' => 'nullable|boolean',
+            'seiketsu' => 'nullable|boolean',
+            'shitsuke' => 'nullable|boolean',
+            'safety_spirit' => 'nullable|boolean',
+            'report' => 'nullable|string',
+            'published' => 'nullable|boolean',
+        ]);
+
+        $sevenS = SevenS::first();
+        $data = [
+            'seiri' => (bool)$request->input('seiri'),
+            'seiton' => (bool)$request->input('seiton'),
+            'seiso' => (bool)$request->input('seiso'),
+            'seiketsu' => (bool)$request->input('seiketsu'),
+            'shitsuke' => (bool)$request->input('shitsuke'),
+            'safety_spirit' => (bool)$request->input('safety_spirit'),
+            'report' => $request->input('report'),
+            'published' => $request->input('published', true) ? true : false,
+        ];
+
+        if ($request->hasFile('before_image')) {
+            if ($sevenS && $sevenS->before_image) {
+                Storage::disk('public')->delete($sevenS->before_image);
+            }
+            $data['before_image'] = $request->file('before_image')->store('seven_s', 'public');
+        }
+
+        if ($request->hasFile('after_image')) {
+            if ($sevenS && $sevenS->after_image) {
+                Storage::disk('public')->delete($sevenS->after_image);
+            }
+            $data['after_image'] = $request->file('after_image')->store('seven_s', 'public');
+        }
+
+        if ($request->hasFile('report_file')) {
+            if ($sevenS && $sevenS->report_file) {
+                Storage::disk('public')->delete($sevenS->report_file);
+            }
+            $data['report_file'] = $request->file('report_file')->store('seven_s/reports', 'public');
+        }
+
+        $checked = 0;
+        $totalChecklist = 6;
+        $checked += $data['seiri'] ? 1 : 0;
+        $checked += $data['seiton'] ? 1 : 0;
+        $checked += $data['seiso'] ? 1 : 0;
+        $checked += $data['seiketsu'] ? 1 : 0;
+        $checked += $data['shitsuke'] ? 1 : 0;
+        $checked += $data['safety_spirit'] ? 1 : 0;
+        $hasBefore = isset($data['before_image']) || ($sevenS && $sevenS->before_image);
+        $hasAfter = isset($data['after_image']) || ($sevenS && $sevenS->after_image);
+        $hasReport = !empty($data['report']) || isset($data['report_file']) || ($sevenS && $sevenS->report_file);
+        $base = ($checked / $totalChecklist) * 70;
+        $photos = ($hasBefore ? 10 : 0) + ($hasAfter ? 10 : 0);
+        $reportScore = $hasReport ? 10 : 0;
+        $data['progress_percent'] = (int)round($base + $photos + $reportScore);
+
+        if ($sevenS) {
+            $sevenS->update($data);
+        } else {
+            SevenS::create($data);
+        }
+
+        return redirect()->route('laboratorium')->with('success', 'Data 7S berhasil diperbarui.');
     }
 }

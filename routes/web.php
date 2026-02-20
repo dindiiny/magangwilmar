@@ -7,6 +7,7 @@ use App\Http\Controllers\FlowController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\LabController as LabCtrl;
 
 /*
 |--------------------------------------------------------------------------
@@ -90,6 +91,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/sops', [LabController::class, 'storeSOP'])->name('sop.store');
     Route::put('/sops/{id}', [LabController::class, 'updateSOP'])->name('sop.update');
     Route::delete('/sops/{id}', [LabController::class, 'destroySOP'])->name('sop.destroy');
+
+    // Seven S (Admin only)
+    Route::post('/seven-s', [LabCtrl::class, 'storeSevenS'])->name('sevens.store');
 
     // Process Flows
     Route::post('/process-flows', [FlowController::class, 'storeFlow'])->name('flow.store');
