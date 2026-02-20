@@ -16,6 +16,10 @@ class MaintenanceMode
             return $next($request);
         }
 
+        if ($request->is('login') || $request->is('logout') || $request->is('register') || $request->is('password/*')) {
+            return $next($request);
+        }
+
         if (Auth::check() && Auth::user()->is_admin) {
             return $next($request);
         }
@@ -29,4 +33,3 @@ class MaintenanceMode
         return response()->view('maintenance', [], 503);
     }
 }
-
