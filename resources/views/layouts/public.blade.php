@@ -62,9 +62,13 @@
                     <i class="fas fa-flask w-6 text-center mr-3"></i>
                     <span class="font-medium">Laboratorium</span>
                 </a>
-                <a href="{{ route('flow') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('flow') ? 'sidebar-active' : '' }}">
-                    <i class="fas fa-diagram-project w-6 text-center mr-3"></i>
-                    <span class="font-medium">Flow Proses</span>
+                <a href="{{ route('sevens') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('sevens') ? 'sidebar-active' : '' }}">
+                    <i class="fas fa-list-check w-6 text-center mr-3"></i>
+                    <span class="font-medium">Kegiatan 7S</span>
+                </a>
+                <a href="{{ route('housekeeping') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('housekeeping') ? 'sidebar-active' : '' }}">
+                    <i class="fas fa-broom w-6 text-center mr-3"></i>
+                    <span class="font-medium">House Keeping</span>
                 </a>
                 @auth
                     @if(Auth::user()->is_admin)

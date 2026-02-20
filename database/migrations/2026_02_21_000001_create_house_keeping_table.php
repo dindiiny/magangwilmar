@@ -6,22 +6,21 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
-        Schema::create('page_contents', function (Blueprint $table) {
+        Schema::create('house_keepings', function (Blueprint $table) {
             $table->id();
+            $table->text('weekly_schedule')->nullable();
+            $table->text('areas')->nullable();
+            $table->string('video_path')->nullable();
+            $table->boolean('published')->default(true);
             $table->timestamps();
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
-        Schema::dropIfExists('page_contents');
+        Schema::dropIfExists('house_keepings');
     }
 };
+

@@ -6,11 +6,26 @@ use App\Models\LabEquipment;
 use App\Models\Product;
 use App\Models\SOPPengujian;
 use App\Models\SevenS;
+use App\Models\HouseKeeping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
 class LabController extends Controller
 {
+    public function houseKeeping()
+    {
+        $houseKeeping = HouseKeeping::first();
+
+        return view('housekeeping', compact('houseKeeping'));
+    }
+
+    public function sevenS()
+    {
+        $sevenS = SevenS::first();
+
+        return view('sevens', compact('sevenS'));
+    }
+
     public function index()
     {
         $instruments = LabEquipment::where('category', 'instrument')->get();
@@ -238,6 +253,38 @@ class LabController extends Controller
             SevenS::create($data);
         }
 
-        return redirect()->route('laboratorium')->with('success', 'Data 7S berhasil diperbarui.');
+        return redirect()->route('sevens')->with('success', 'Data 7S berhasil diperbarui.');
+    }
+
+    public function storeHouseKeeping(Request $request)
+    {
+        $request->validate([
+            'weekly_schedule' => 'nullable|string',
+            'areas' => 'nullable|string',
+            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:51200',
+            'published' => 'nullable|boolean',
+        ]);
+
+        $houseKeeping = HouseKeeping::first();
+        $data = [
+            'weekly_schedule' => $request->input('weekly_schedule'),
+            'areas' => $request->input('areas'),
+            'published' => $request->input('published', true) ? true : false,
+        ];
+
+        if ($request->hasFile('video')) {
+            if ($houseKeeping && $houseKeeping->video_path) {
+                Storage::disk('public')->delete($houseKeeping->video_path);
+            }
+            $data['video_path'] = $request->file('video')->store('housekeeping/videos', 'public');
+        }
+
+        if ($houseKeeping) {
+            $houseKeeping->update($data);
+        } else {
+            HouseKeeping::create($data);
+        }
+
+        return redirect()->route('housekeeping')->with('success', 'Data House Keeping berhasil diperbarui.');
     }
 }

@@ -105,7 +105,7 @@
                 <a href="{{ route('flow') }}" class="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition flex items-center justify-between group">
                     <div>
                         <h4 class="font-bold text-gray-800 group-hover:text-emerald-600 transition">Kelola Flow Proses</h4>
-                        <p class="text-sm text-gray-500">Edit Alur Produksi</p>
+                        <p class="text-sm text-gray-500">Tambah dan atur alur proses</p>
                     </div>
                     <i class="fas fa-chevron-right text-gray-400 group-hover:text-emerald-600 transition"></i>
                 </a>
