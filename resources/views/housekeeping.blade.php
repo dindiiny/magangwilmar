@@ -136,15 +136,15 @@
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Area Cleaning</label>
-                                <textarea name="areas" id="hkAreas" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Area yang dibersihkan pada hari tersebut"></textarea>
+                                <textarea name="areas" id="hkAreas" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Area yang dibersihkan pada hari tersebut" required></textarea>
                             </div>
                             <div>
                                 <label class="block text-gray-700 text-sm font-bold mb-1">Kegiatan House Keeping</label>
-                                <textarea name="activities" id="hkActivities" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Uraian kegiatan cleaning pada hari tersebut"></textarea>
+                                <textarea name="activities" id="hkActivities" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Uraian kegiatan cleaning pada hari tersebut" required></textarea>
                             </div>
                             <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-1">Video House Keeping (Opsional)</label>
-                                <input type="file" name="video" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="video/*">
+                                <label class="block text-gray-700 text-sm font-bold mb-1">Video House Keeping</label>
+                                <input type="file" name="video" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept="video/*" required>
                                 <p class="text-xs text-gray-500 mt-1">
                                     Format disarankan: MP4. Maksimal ukuran file 5 MB.
                                 </p>

@@ -6,6 +6,7 @@ use App\Models\LabEquipment;
 use App\Models\Product;
 use App\Models\SOPPengujian;
 use App\Models\SevenS;
+use App\Models\SevenReport;
 use App\Models\HouseKeeping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -25,7 +26,11 @@ class LabController extends Controller
     {
         $sevenS = SevenS::first();
 
-        return view('sevens', compact('sevenS'));
+        $reports = $sevenS
+            ? SevenReport::where('seven_s_id', $sevenS->id)->orderBy('created_at', 'desc')->get()
+            : collect();
+
+        return view('sevens', compact('sevenS', 'reports'));
     }
 
     public function index()
@@ -185,96 +190,236 @@ class LabController extends Controller
 
     public function storeSevenS(Request $request)
     {
-        $request->validate([
-            'progress_percent' => 'nullable|integer|min:0|max:100',
-            'before_image' => 'nullable|image|max:5120',
-            'after_image' => 'nullable|image|max:5120',
-            'report_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
-            'seiri' => 'nullable|boolean',
-            'seiton' => 'nullable|boolean',
-            'seiso' => 'nullable|boolean',
-            'seiketsu' => 'nullable|boolean',
-            'shitsuke' => 'nullable|boolean',
-            'safety_spirit' => 'nullable|boolean',
-            'report' => 'nullable|string',
-            'published' => 'nullable|boolean',
-        ]);
+        $section = $request->input('section', 'checklist');
 
         $sevenS = SevenS::first();
-        $data = [
-            'seiri' => (bool)$request->input('seiri'),
-            'seiton' => (bool)$request->input('seiton'),
-            'seiso' => (bool)$request->input('seiso'),
-            'seiketsu' => (bool)$request->input('seiketsu'),
-            'shitsuke' => (bool)$request->input('shitsuke'),
-            'safety_spirit' => (bool)$request->input('safety_spirit'),
-            'report' => $request->input('report'),
-            'published' => $request->input('published', true) ? true : false,
-        ];
-
-        if ($request->hasFile('before_image')) {
-            if ($sevenS && $sevenS->before_image) {
-                Storage::disk('public')->delete($sevenS->before_image);
-            }
-            $data['before_image'] = $request->file('before_image')->store('seven_s', 'public');
+        if (!$sevenS) {
+            $sevenS = new SevenS();
+            $sevenS->seiri = false;
+            $sevenS->seiton = false;
+            $sevenS->seiso = false;
+            $sevenS->seiketsu = false;
+            $sevenS->shitsuke = false;
+            $sevenS->safety_spirit = false;
+            $sevenS->before_image = null;
+            $sevenS->after_image = null;
+            $sevenS->report = null;
+            $sevenS->report_file = null;
+            $sevenS->published = true;
+            $sevenS->progress_percent = 0;
         }
 
-        if ($request->hasFile('after_image')) {
-            if ($sevenS && $sevenS->after_image) {
-                Storage::disk('public')->delete($sevenS->after_image);
-            }
-            $data['after_image'] = $request->file('after_image')->store('seven_s', 'public');
-        }
+        if ($section === 'checklist') {
+            $request->validate([
+                'seiri' => 'nullable|boolean',
+                'seiton' => 'nullable|boolean',
+                'seiso' => 'nullable|boolean',
+                'seiketsu' => 'nullable|boolean',
+                'shitsuke' => 'nullable|boolean',
+                'safety_spirit' => 'nullable|boolean',
+            ]);
 
-        if ($request->hasFile('report_file')) {
-            if ($sevenS && $sevenS->report_file) {
-                Storage::disk('public')->delete($sevenS->report_file);
+            $sevenS->seiri = (bool)$request->input('seiri');
+            $sevenS->seiton = (bool)$request->input('seiton');
+            $sevenS->seiso = (bool)$request->input('seiso');
+            $sevenS->seiketsu = (bool)$request->input('seiketsu');
+            $sevenS->shitsuke = (bool)$request->input('shitsuke');
+            $sevenS->safety_spirit = (bool)$request->input('safety_spirit');
+        } elseif ($section === 'photos') {
+            $request->validate([
+                'before_image' => 'nullable|image|max:5120',
+                'after_image' => 'nullable|image|max:5120',
+            ]);
+
+            if ($request->hasFile('before_image')) {
+                if ($sevenS->before_image) {
+                    Storage::disk('public')->delete($sevenS->before_image);
+                }
+                $sevenS->before_image = $request->file('before_image')->store('seven_s', 'public');
             }
-            $data['report_file'] = $request->file('report_file')->store('seven_s/reports', 'public');
+
+            if ($request->hasFile('after_image')) {
+                if ($sevenS->after_image) {
+                    Storage::disk('public')->delete($sevenS->after_image);
+                }
+                $sevenS->after_image = $request->file('after_image')->store('seven_s', 'public');
+            }
+        } elseif ($section === 'report') {
+            $request->validate([
+                'title' => 'nullable|string|max:255',
+                'report' => 'nullable|string',
+                'report_file' => 'nullable|file|mimes:pdf,doc,docx|max:5120',
+                'published' => 'nullable|boolean',
+            ]);
+
+            $reportId = $request->input('report_id');
+            $report = null;
+
+            if ($reportId) {
+                $report = SevenReport::where('id', $reportId)
+                    ->where('seven_s_id', $sevenS->id)
+                    ->first();
+            }
+
+            if (!$report) {
+                $report = new SevenReport();
+                $report->seven_s_id = $sevenS->id;
+            }
+
+            $title = $request->input('title');
+            if ($title !== null && $title !== '') {
+                $report->title = $title;
+            } elseif (!$report->title) {
+                $nextNumber = SevenReport::where('seven_s_id', $sevenS->id)->count() + 1;
+                $report->title = 'Laporan ' . $nextNumber;
+            }
+
+            $report->content = $request->input('report');
+
+            if ($request->hasFile('report_file')) {
+                if ($report->file_path) {
+                    Storage::disk('public')->delete($report->file_path);
+                }
+                $report->file_path = $request->file('report_file')->store('seven_s/reports', 'public');
+            }
+
+            $report->save();
+
+            $sevenS->published = $request->input('published', true) ? true : false;
+        } elseif ($section === 'labels') {
+            $request->validate([
+                'seiri_text' => 'nullable|string|max:1000',
+                'seiton_text' => 'nullable|string|max:1000',
+                'seiso_text' => 'nullable|string|max:1000',
+                'seiketsu_text' => 'nullable|string|max:1000',
+                'shitsuke_text' => 'nullable|string|max:1000',
+                'safety_text' => 'nullable|string|max:1000',
+                'spirit_text' => 'nullable|string|max:1000',
+            ]);
+
+            $sevenS->seiri_text = $request->input('seiri_text') ?: 'Seiri (Sort) – pemilahan barang perlu dan tidak perlu.';
+            $sevenS->seiton_text = $request->input('seiton_text') ?: 'Seiton (Set in Order) – penataan peralatan dan bahan kerja.';
+            $sevenS->seiso_text = $request->input('seiso_text') ?: 'Seiso (Shine) – pembersihan rutin area kerja.';
+            $sevenS->seiketsu_text = $request->input('seiketsu_text') ?: 'Seiketsu (Standardize) – standarisasi tata letak dan label.';
+            $sevenS->shitsuke_text = $request->input('shitsuke_text') ?: 'Shitsuke (Sustain) – pembiasaan disiplin dan audit berkala.';
+            $sevenS->safety_text = $request->input('safety_text') ?: 'Safety – aspek keselamatan di area kerja.';
+            $sevenS->spirit_text = $request->input('spirit_text') ?: 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.';
         }
 
         $checked = 0;
         $totalChecklist = 6;
-        $checked += $data['seiri'] ? 1 : 0;
-        $checked += $data['seiton'] ? 1 : 0;
-        $checked += $data['seiso'] ? 1 : 0;
-        $checked += $data['seiketsu'] ? 1 : 0;
-        $checked += $data['shitsuke'] ? 1 : 0;
-        $checked += $data['safety_spirit'] ? 1 : 0;
-        $hasBefore = isset($data['before_image']) || ($sevenS && $sevenS->before_image);
-        $hasAfter = isset($data['after_image']) || ($sevenS && $sevenS->after_image);
-        $hasReport = !empty($data['report']) || isset($data['report_file']) || ($sevenS && $sevenS->report_file);
+        $checked += $sevenS->seiri ? 1 : 0;
+        $checked += $sevenS->seiton ? 1 : 0;
+        $checked += $sevenS->seiso ? 1 : 0;
+        $checked += $sevenS->seiketsu ? 1 : 0;
+        $checked += $sevenS->shitsuke ? 1 : 0;
+        $checked += $sevenS->safety_spirit ? 1 : 0;
+        $hasBefore = !empty($sevenS->before_image);
+        $hasAfter = !empty($sevenS->after_image);
+        $hasReport = $sevenS->id
+            ? SevenReport::where('seven_s_id', $sevenS->id)
+                ->where(function ($query) {
+                    $query->whereNotNull('content')
+                        ->orWhereNotNull('file_path');
+                })
+                ->exists()
+            : false;
         $base = ($checked / $totalChecklist) * 70;
         $photos = ($hasBefore ? 10 : 0) + ($hasAfter ? 10 : 0);
         $reportScore = $hasReport ? 10 : 0;
-        $data['progress_percent'] = (int)round($base + $photos + $reportScore);
+        $sevenS->progress_percent = (int)round($base + $photos + $reportScore);
 
-        if ($sevenS) {
-            $sevenS->update($data);
-        } else {
-            SevenS::create($data);
+        $sevenS->save();
+
+        $message = 'Data 7S berhasil diperbarui.';
+        if ($section === 'checklist') {
+            $message = 'Checklist 7S berhasil diperbarui.';
+        } elseif ($section === 'photos') {
+            $message = 'Foto 7S berhasil diperbarui.';
+        } elseif ($section === 'report') {
+            $message = 'Laporan 7S berhasil diperbarui.';
+        } elseif ($section === 'labels') {
+            $message = 'Teks 7S berhasil diperbarui.';
         }
 
-        return redirect()->route('sevens')->with('success', 'Data 7S berhasil diperbarui.');
+        return redirect()->route('sevens')->with('success', $message);
     }
 
-    public function destroySevenS()
+    public function destroySevenS(Request $request)
     {
+        $target = $request->input('target', 'report');
+
         $sevenS = SevenS::first();
         if ($sevenS) {
-            if ($sevenS->before_image) {
-                Storage::disk('public')->delete($sevenS->before_image);
+            if ($target === 'report') {
+                $reportId = $request->input('report_id');
+                if ($reportId) {
+                    $report = SevenReport::where('id', $reportId)
+                        ->where('seven_s_id', $sevenS->id)
+                        ->first();
+                    if ($report) {
+                        if ($report->file_path) {
+                            Storage::disk('public')->delete($report->file_path);
+                        }
+                        $report->delete();
+                    }
+                }
+            } elseif ($target === 'before_image') {
+                if ($sevenS->before_image) {
+                    Storage::disk('public')->delete($sevenS->before_image);
+                }
+                $sevenS->before_image = null;
+            } elseif ($target === 'after_image') {
+                if ($sevenS->after_image) {
+                    Storage::disk('public')->delete($sevenS->after_image);
+                }
+                $sevenS->after_image = null;
+            } elseif ($target === 'checklist') {
+                $sevenS->seiri = false;
+                $sevenS->seiton = false;
+                $sevenS->seiso = false;
+                $sevenS->seiketsu = false;
+                $sevenS->shitsuke = false;
+                $sevenS->safety_spirit = false;
             }
-            if ($sevenS->after_image) {
-                Storage::disk('public')->delete($sevenS->after_image);
-            }
-            if ($sevenS->report_file) {
-                Storage::disk('public')->delete($sevenS->report_file);
-            }
-            $sevenS->delete();
+
+            $checked = 0;
+            $totalChecklist = 6;
+            $checked += $sevenS->seiri ? 1 : 0;
+            $checked += $sevenS->seiton ? 1 : 0;
+            $checked += $sevenS->seiso ? 1 : 0;
+            $checked += $sevenS->seiketsu ? 1 : 0;
+            $checked += $sevenS->shitsuke ? 1 : 0;
+            $checked += $sevenS->safety_spirit ? 1 : 0;
+            $hasBefore = !empty($sevenS->before_image);
+            $hasAfter = !empty($sevenS->after_image);
+            $hasReport = $sevenS->id
+                ? SevenReport::where('seven_s_id', $sevenS->id)
+                    ->where(function ($query) {
+                        $query->whereNotNull('content')
+                            ->orWhereNotNull('file_path');
+                    })
+                    ->exists()
+                : false;
+            $base = ($checked / $totalChecklist) * 70;
+            $photos = ($hasBefore ? 10 : 0) + ($hasAfter ? 10 : 0);
+            $reportScore = $hasReport ? 10 : 0;
+            $sevenS->progress_percent = (int)round($base + $photos + $reportScore);
+            $sevenS->save();
         }
 
-        return redirect()->route('sevens')->with('success', 'Data 7S berhasil dihapus.');
+        $message = 'Data 7S berhasil diperbarui.';
+        if ($target === 'report') {
+            $message = 'Laporan 7S berhasil dihapus.';
+        } elseif ($target === 'before_image') {
+            $message = 'Foto before 7S berhasil dihapus.';
+        } elseif ($target === 'after_image') {
+            $message = 'Foto after 7S berhasil dihapus.';
+        } elseif ($target === 'checklist') {
+            $message = 'Checklist 7S berhasil direset.';
+        }
+
+        return redirect()->route('sevens')->with('success', $message);
     }
 
     public function storeHouseKeeping(Request $request)
@@ -282,9 +427,9 @@ class LabController extends Controller
         $request->validate([
             'date' => 'required|date',
             'day_name' => 'required|string|max:20',
-            'activities' => 'nullable|string',
-            'areas' => 'nullable|string',
-            'video' => 'nullable|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:5120',
+            'activities' => 'required|string',
+            'areas' => 'required|string',
+            'video' => 'required|file|mimetypes:video/mp4,video/quicktime,video/x-msvideo,video/x-ms-wmv|max:5120',
             'published' => 'nullable|boolean',
         ]);
 

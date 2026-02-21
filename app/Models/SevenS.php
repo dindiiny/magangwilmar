@@ -21,5 +21,12 @@ class SevenS extends Model
         'report',
         'report_file',
         'published',
+        'seiri_text',
+        'seiton_text',
+        'seiso_text',
+        'seiketsu_text',
+        'shitsuke_text',
+        'safety_text',
+        'spirit_text',
     ];
 }

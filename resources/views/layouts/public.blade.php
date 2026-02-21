@@ -72,6 +72,10 @@
                 </a>
                 @auth
                     @if(Auth::user()->is_admin)
+                        <a href="{{ route('flow') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('flow') ? 'sidebar-active' : '' }}">
+                            <i class="fas fa-diagram-project w-6 text-center mr-3"></i>
+                            <span class="font-medium">Flow Proses</span>
+                        </a>
                         <a href="{{ route('documents.index') }}" class="flex items-center py-3 px-6 hover:bg-emerald-800 transition duration-200 {{ request()->routeIs('documents.index') ? 'sidebar-active' : '' }}">
                             <i class="fas fa-file-alt w-6 text-center mr-3"></i>
                             <span class="font-medium">Laporan & Dokumen</span>
