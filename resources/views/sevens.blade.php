@@ -3,7 +3,7 @@
 @section('title', 'Kegiatan 7S - Wilmar Nabati Indonesia')
 
 @section('content')
-    <div class="max-w-6xl mx-auto space-y-6">
+    <div class="max-w-7xl mx-auto space-y-6">
         <div class="bg-white rounded-lg shadow p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-2">Kegiatan 7S Laboratorium</h1>
             <p class="text-gray-600">
@@ -128,7 +128,7 @@
                     $s = isset($sevenS) && $sevenS ? $sevenS : null;
                 @endphp
                 <div class="max-h-72 overflow-y-auto pr-2">
-                    <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-3 text-xs md:text-sm text-gray-700">
+                    <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 text-xs md:text-sm text-gray-700">
                         <li class="flex items-start space-x-2">
                             <input type="checkbox" {{ $s && $s->seiri ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
                             <span>{{ $s && $s->seiri_text ? $s->seiri_text : 'Seiri (Sort) – pemilahan barang perlu dan tidak perlu.' }}</span>
@@ -158,8 +158,7 @@
                             <span>{{ $s && $s->spirit_text ? $s->spirit_text : 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.' }}</span>
                         </li>
                     </ul>
-                </div>
-                {{-- kelola checklist dipindah ke modal, tampilan di sini hanya display --}}
+                </ul>
             </div>
 
             <div class="bg-white rounded-lg shadow p-6">
@@ -212,8 +211,8 @@
 
     @auth
         @if(Auth::user()->is_admin)
-            <div id="sevenSTextModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-                <div class="bg-white rounded-lg w-full max-w-xl mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
+            <div id="sevenSTextModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg w-full max-w-2xl mx-4 p-6 shadow-2xl relative max-h-[80vh] overflow-y-auto">
                     <button type="button" onclick="closeSevenSTextModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -260,8 +259,8 @@
                 </div>
             </div>
 
-            <div id="sevenSChecklistModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-                <div class="bg-white rounded-lg w-full max-w-md mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
+            <div id="sevenSChecklistModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg w-full max-w-lg mx-4 p-6 shadow-2xl relative max-h-[80vh] overflow-y-auto">
                     <button type="button" onclick="closeSevenSChecklistModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -311,8 +310,8 @@
                 </div>
             </div>
 
-            <div id="reportCreateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-                <div class="bg-white rounded-lg w-full max-w-xl mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
+            <div id="reportCreateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg w-full max-w-2xl mx-4 p-6 shadow-2xl relative max-h-[80vh] overflow-y-auto">
                     <button type="button" onclick="closeReportCreateModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -350,8 +349,8 @@
 
             @if(isset($reports) && $reports->count())
                 @foreach($reports as $report)
-                    <div id="reportModal-{{ $report->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
-                        <div class="bg-white rounded-lg w-full max-w-xl mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
+                    <div id="reportModal-{{ $report->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                        <div class="bg-white rounded-lg w-full max-w-2xl mx-4 p-6 shadow-2xl relative max-h-[80vh] overflow-y-auto">
                             <button type="button" onclick="closeReportModal({{ $report->id }})" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                                 <i class="fas fa-times text-xl"></i>
                             </button>
