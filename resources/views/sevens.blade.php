@@ -104,7 +104,7 @@
                 @endauth
             </div>
 
-        <div class="grid grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Checklist 7S</h2>
