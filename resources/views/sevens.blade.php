@@ -110,7 +110,7 @@
                     <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Checklist 7S</h2>
                     @auth
                         @if(Auth::user()->is_admin)
-                            <div class="flex items-center space-x-2">
+                            <div class="flex flex-col items-end space-y-1 sm:flex-row sm:space-x-3 sm:space-y-0">
                                 <button type="button" onclick="openSevenSChecklistModal()" class="text-xs text-emerald-700 hover:text-emerald-900 inline-flex items-center">
                                     <i class="fas fa-tasks mr-1"></i> Kelola checklist
                                 </button>
@@ -127,7 +127,7 @@
                 @php
                     $s = isset($sevenS) && $sevenS ? $sevenS : null;
                 @endphp
-                <ul class="space-y-2 text-sm text-gray-700">
+                <ul class="grid md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-700">
                     <li class="flex items-start space-x-2">
                         <input type="checkbox" {{ $s && $s->seiri ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
                         <span>{{ $s && $s->seiri_text ? $s->seiri_text : 'Seiri (Sort) – pemilahan barang perlu dan tidak perlu.' }}</span>
@@ -172,7 +172,7 @@
                     @endauth
                 </div>
                 @if(isset($reports) && $reports->count())
-                    <div class="space-y-4">
+                    <div class="grid md:grid-cols-2 gap-4">
                         @foreach($reports as $report)
                             <div class="border rounded-lg p-3 space-y-2">
                                 <div class="flex items-center justify-between text-xs text-gray-500">
