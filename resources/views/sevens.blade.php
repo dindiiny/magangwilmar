@@ -127,7 +127,7 @@
                 @php
                     $s = isset($sevenS) && $sevenS ? $sevenS : null;
                 @endphp
-                <ul class="grid md:grid-cols-2 gap-x-6 gap-y-2 text-sm text-gray-700">
+                <ul class="grid sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-3 text-xs md:text-sm text-gray-700">
                     <li class="flex items-start space-x-2">
                         <input type="checkbox" {{ $s && $s->seiri ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
                         <span>{{ $s && $s->seiri_text ? $s->seiri_text : 'Seiri (Sort) – pemilahan barang perlu dan tidak perlu.' }}</span>
