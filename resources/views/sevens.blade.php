@@ -110,9 +110,14 @@
                     <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Checklist 7S</h2>
                     @auth
                         @if(Auth::user()->is_admin)
-                            <button type="button" onclick="openSevenSTextModal()" class="text-xs text-emerald-700 hover:text-emerald-900 inline-flex items-center">
-                                <i class="fas fa-pen mr-1"></i> Edit teks 7S
-                            </button>
+                            <div class="flex items-center space-x-2">
+                                <button type="button" onclick="openSevenSChecklistModal()" class="text-xs text-emerald-700 hover:text-emerald-900 inline-flex items-center">
+                                    <i class="fas fa-tasks mr-1"></i> Kelola checklist
+                                </button>
+                                <button type="button" onclick="openSevenSTextModal()" class="text-xs text-emerald-700 hover:text-emerald-900 inline-flex items-center">
+                                    <i class="fas fa-pen mr-1"></i> Edit teks 7S
+                                </button>
+                            </div>
                         @endif
                     @endauth
                 </div>
@@ -152,54 +157,19 @@
                         <span>{{ $s && $s->spirit_text ? $s->spirit_text : 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.' }}</span>
                     </li>
                 </ul>
-                @auth
-                    @if(Auth::user()->is_admin)
-                        <form action="{{ route('sevens.store') }}" method="POST" class="mt-4 border-t pt-4 space-y-3">
-                            @csrf
-                            <input type="hidden" name="section" value="checklist">
-                            <div class="grid grid-cols-2 gap-2 text-sm">
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="seiri" value="1" {{ $s && $s->seiri ? 'checked' : '' }} class="rounded border-gray-300">
-                                    <span>Seiri</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="seiton" value="1" {{ $s && $s->seiton ? 'checked' : '' }} class="rounded border-gray-300">
-                                    <span>Seiton</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="seiso" value="1" {{ $s && $s->seiso ? 'checked' : '' }} class="rounded border-gray-300">
-                                    <span>Seiso</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="seiketsu" value="1" {{ $s && $s->seiketsu ? 'checked' : '' }} class="rounded border-gray-300">
-                                    <span>Seiketsu</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="shitsuke" value="1" {{ $s && $s->shitsuke ? 'checked' : '' }} class="rounded border-gray-300">
-                                    <span>Shitsuke</span>
-                                </label>
-                                <label class="flex items-center space-x-2">
-                                    <input type="checkbox" name="safety_spirit" value="1" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="rounded border-gray-300">
-                                    <span>Safety &amp; Spirit</span>
-                                </label>
-                            </div>
-                            <div class="flex justify-end items-center space-x-3">
-                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded">Simpan Checklist</button>
-                            </div>
-                        </form>
-                        <form action="{{ route('sevens.destroy') }}" method="POST" class="mt-2" onsubmit="return confirm('Reset semua checklist 7S?');">
-                            @csrf
-                            @method('DELETE')
-                            <input type="hidden" name="target" value="checklist">
-                            <button type="submit" class="text-xs text-red-600 hover:text-red-800">Reset Checklist</button>
-                        </form>
-                    @endif
-                @endauth
+                {{-- kelola checklist dipindah ke modal, tampilan di sini hanya display --}}
             </div>
 
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Laporan Implementasi</h2>
+                    @auth
+                        @if(Auth::user()->is_admin)
+                            <button type="button" onclick="openReportCreateModal()" class="text-xs text-emerald-700 hover:text-emerald-900 inline-flex items-center">
+                                <i class="fas fa-plus mr-1"></i> Tambah laporan
+                            </button>
+                        @endif
+                    @endauth
                 </div>
                 @if(isset($reports) && $reports->count())
                     <div class="space-y-4">
@@ -209,71 +179,22 @@
                                     <span>{{ $report->title ?: 'Laporan ' . $loop->iteration }}</span>
                                     <span>{{ $report->created_at->format('d/m/Y H:i') }}</span>
                                 </div>
+                                <div class="text-sm text-gray-700 whitespace-pre-line">
+                                    {{ $report->content }}
+                                </div>
+                                @if($report->file_path)
+                                    <div class="mt-1">
+                                        <a href="{{ Storage::disk('public')->url($report->file_path) }}" target="_blank" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 text-xs font-semibold">
+                                            <i class="fas fa-file-alt mr-1"></i> Unduh Laporan
+                                        </a>
+                                    </div>
+                                @endif
                                 @auth
                                     @if(Auth::user()->is_admin)
-                                        <form action="{{ route('sevens.store') }}" method="POST" enctype="multipart/form-data" class="space-y-2">
-                                            @csrf
-                                            <input type="hidden" name="section" value="report">
-                                            <input type="hidden" name="report_id" value="{{ $report->id }}">
-                                            <div>
-                                                <label class="block text-gray-700 text-xs font-semibold mb-1">Judul Laporan</label>
-                                                <input type="text" name="title" value="{{ $report->title }}" class="w-full border rounded px-2 py-1 text-sm focus:outline-emerald-500">
-                                            </div>
-                                            <div>
-                                                <label class="block text-gray-700 text-xs font-semibold mb-1">Isi Laporan</label>
-                                                <textarea name="report" rows="3" class="w-full border rounded px-2 py-1 text-sm focus:outline-emerald-500">{{ $report->content }}</textarea>
-                                            </div>
-                                            <div class="flex items-center justify-between">
-                                                <div class="text-xs text-gray-600">
-                                                    @if($report->file_path)
-                                                        <a href="{{ Storage::disk('public')->url($report->file_path) }}" target="_blank" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 font-semibold">
-                                                            <i class="fas fa-file-alt mr-1"></i> Lihat File
-                                                        </a>
-                                                    @else
-                                                        <span class="text-gray-400">Belum ada file laporan</span>
-                                                    @endif
-                                                </div>
-                                                <div class="text-right">
-                                                    <label class="block text-gray-700 text-xs font-semibold mb-1">Ganti File</label>
-                                                    <input type="file" name="report_file" class="w-full border rounded px-2 py-1 text-xs focus:outline-emerald-500" accept=".pdf,.doc,.docx">
-                                                </div>
-                                            </div>
-                                            <div class="flex items-center justify-between mt-2">
-                                                <div class="flex items-center space-x-2">
-                                                    <input type="checkbox" name="published" value="1" {{ $s && $s->published ? 'checked' : '' }} class="rounded border-gray-300">
-                                                    <span class="text-xs text-gray-700">Tampilkan ke publik</span>
-                                                </div>
-                                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-1 px-3 rounded">Simpan Laporan</button>
-                                            </div>
-                                        </form>
-                                        <form action="{{ route('sevens.destroy') }}" method="POST" class="mt-2 text-right" onsubmit="return confirm('Hapus laporan ini?');">
-                                            @csrf
-                                            @method('DELETE')
-                                            <input type="hidden" name="target" value="report">
-                                            <input type="hidden" name="report_id" value="{{ $report->id }}">
-                                            <button type="submit" class="text-xs text-red-600 hover:text-red-800">Hapus Laporan</button>
-                                        </form>
-                                    @else
-                                        <div class="text-sm text-gray-700 whitespace-pre-line">
-                                            {{ $report->content }}
-                                        </div>
-                                        @if($report->file_path)
-                                            <div class="mt-1">
-                                                <a href="{{ Storage::disk('public')->url($report->file_path) }}" target="_blank" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 text-xs font-semibold">
-                                                    <i class="fas fa-file-alt mr-1"></i> Unduh Laporan
-                                                </a>
-                                            </div>
-                                        @endif
-                                    @endif
-                                @else
-                                    <div class="text-sm text-gray-700 whitespace-pre-line">
-                                        {{ $report->content }}
-                                    </div>
-                                    @if($report->file_path)
-                                        <div class="mt-1">
-                                            <a href="{{ Storage::disk('public')->url($report->file_path) }}" target="_blank" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 text-xs font-semibold">
-                                                <i class="fas fa-file-alt mr-1"></i> Unduh Laporan
-                                            </a>
+                                        <div class="flex justify-end mt-2">
+                                            <button type="button" onclick="openReportModal({{ $report->id }})" class="text-xs text-emerald-700 hover:text-emerald-900 inline-flex items-center">
+                                                <i class="fas fa-edit mr-1"></i> Kelola laporan
+                                            </button>
                                         </div>
                                     @endif
                                 @endauth
@@ -283,34 +204,6 @@
                 @else
                     <p class="text-sm text-gray-600">Belum ada laporan implementasi yang ditambahkan.</p>
                 @endif
-                @auth
-                    @if(Auth::user()->is_admin)
-                        <form action="{{ route('sevens.store') }}" method="POST" enctype="multipart/form-data" class="mt-4 border-t pt-4 space-y-3">
-                            @csrf
-                            <input type="hidden" name="section" value="report">
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-1">Judul Laporan</label>
-                                <input type="text" name="title" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Misal: Audit 7S Mingguan">
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-1">Tambah Laporan Baru</label>
-                                <textarea name="report" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-gray-700 text-sm font-bold mb-1">Upload File (opsional)</label>
-                                <input type="file" name="report_file" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept=".pdf,.doc,.docx">
-                                <p class="text-xs text-gray-500 mt-1">Format: PDF, DOC, DOCX. Maksimal ukuran file 5 MB.</p>
-                            </div>
-                            <div class="flex items-center space-x-2">
-                                <input type="checkbox" name="published" value="1" {{ $s && $s->published ? 'checked' : '' }} class="rounded border-gray-300">
-                                <span class="text-sm text-gray-700">Tampilkan ke publik</span>
-                            </div>
-                            <div class="flex justify-end">
-                                <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold py-2 px-4 rounded">Tambah Laporan</button>
-                            </div>
-                        </form>
-                    @endif
-                @endauth
             </div>
         </div>
     </div>
@@ -364,6 +257,151 @@
                     </form>
                 </div>
             </div>
+
+            <div id="sevenSChecklistModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 p-6 shadow-2xl relative">
+                    <button type="button" onclick="closeSevenSChecklistModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Kelola Checklist 7S</h3>
+                    <form action="{{ route('sevens.store') }}" method="POST" class="space-y-4">
+                        @csrf
+                        <input type="hidden" name="section" value="checklist">
+                        @php
+                            $s = isset($sevenS) && $sevenS ? $sevenS : null;
+                        @endphp
+                        <div class="grid grid-cols-2 gap-3 text-sm">
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="seiri" value="1" {{ $s && $s->seiri ? 'checked' : '' }} class="rounded border-gray-300">
+                                <span>Seiri</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="seiton" value="1" {{ $s && $s->seiton ? 'checked' : '' }} class="rounded border-gray-300">
+                                <span>Seiton</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="seiso" value="1" {{ $s && $s->seiso ? 'checked' : '' }} class="rounded border-gray-300">
+                                <span>Seiso</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="seiketsu" value="1" {{ $s && $s->seiketsu ? 'checked' : '' }} class="rounded border-gray-300">
+                                <span>Seiketsu</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="shitsuke" value="1" {{ $s && $s->shitsuke ? 'checked' : '' }} class="rounded border-gray-300">
+                                <span>Shitsuke</span>
+                            </label>
+                            <label class="flex items-center space-x-2">
+                                <input type="checkbox" name="safety_spirit" value="1" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="rounded border-gray-300">
+                                <span>Safety &amp; Spirit</span>
+                            </label>
+                        </div>
+                        <div class="flex justify-between items-center mt-4">
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold py-2 px-4 rounded">Simpan Checklist</button>
+                            <form action="{{ route('sevens.destroy') }}" method="POST" onsubmit="return confirm('Reset semua checklist 7S?');">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="target" value="checklist">
+                                <button type="submit" class="text-xs text-red-600 hover:text-red-800">Reset Checklist</button>
+                            </form>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div id="reportCreateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                <div class="bg-white rounded-lg w-full max-w-xl mx-4 p-6 shadow-2xl relative">
+                    <button type="button" onclick="closeReportCreateModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                        <i class="fas fa-times text-xl"></i>
+                    </button>
+                    <h3 class="text-xl font-bold mb-4 text-gray-800">Tambah Laporan 7S</h3>
+                    <form action="{{ route('sevens.store') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                        @csrf
+                        <input type="hidden" name="section" value="report">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-1">Judul Laporan</label>
+                            <input type="text" name="title" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" placeholder="Misal: Audit 7S Mingguan">
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-1">Isi Laporan</label>
+                            <textarea name="report" rows="3" class="w-full border rounded px-3 py-2 focus:outline-emerald-500"></textarea>
+                        </div>
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-1">Upload File (opsional)</label>
+                            <input type="file" name="report_file" class="w-full border rounded px-3 py-2 focus:outline-emerald-500" accept=".pdf,.doc,.docx">
+                            <p class="text-xs text-gray-500 mt-1">Format: PDF, DOC, DOCX. Maksimal ukuran file 5 MB.</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            @php
+                                $s = isset($sevenS) && $sevenS ? $sevenS : null;
+                            @endphp
+                            <input type="checkbox" name="published" value="1" {{ $s && $s->published ? 'checked' : '' }} class="rounded border-gray-300">
+                            <span class="text-sm text-gray-700">Tampilkan ke publik</span>
+                        </div>
+                        <div class="flex justify-end space-x-3 mt-4">
+                            <button type="button" onclick="closeReportCreateModal()" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Batal</button>
+                            <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold py-2 px-5 rounded">Tambah Laporan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            @if(isset($reports) && $reports->count())
+                @foreach($reports as $report)
+                    <div id="reportModal-{{ $report->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
+                        <div class="bg-white rounded-lg w-full max-w-xl mx-4 p-6 shadow-2xl relative">
+                            <button type="button" onclick="closeReportModal({{ $report->id }})" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
+                                <i class="fas fa-times text-xl"></i>
+                            </button>
+                            <h3 class="text-xl font-bold mb-4 text-gray-800">Kelola Laporan</h3>
+                            <form action="{{ route('sevens.store') }}" method="POST" enctype="multipart/form-data" class="space-y-3">
+                                @csrf
+                                <input type="hidden" name="section" value="report">
+                                <input type="hidden" name="report_id" value="{{ $report->id }}">
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-semibold mb-1">Judul Laporan</label>
+                                    <input type="text" name="title" value="{{ $report->title }}" class="w-full border rounded px-3 py-2 text-sm focus:outline-emerald-500">
+                                </div>
+                                <div>
+                                    <label class="block text-gray-700 text-sm font-semibold mb-1">Isi Laporan</label>
+                                    <textarea name="report" rows="3" class="w-full border rounded px-3 py-2 text-sm focus:outline-emerald-500">{{ $report->content }}</textarea>
+                                </div>
+                                <div class="flex items-center justify-between">
+                                    <div class="text-xs text-gray-600">
+                                        @if($report->file_path)
+                                            <a href="{{ Storage::disk('public')->url($report->file_path) }}" target="_blank" class="inline-flex items-center text-emerald-700 hover:text-emerald-900 font-semibold">
+                                                <i class="fas fa-file-alt mr-1"></i> Lihat File
+                                            </a>
+                                        @else
+                                            <span class="text-gray-400">Belum ada file laporan</span>
+                                        @endif
+                                    </div>
+                                    <div class="text-right">
+                                        <label class="block text-gray-700 text-xs font-semibold mb-1">Ganti File</label>
+                                        <input type="file" name="report_file" class="w-full border rounded px-2 py-1 text-xs focus:outline-emerald-500" accept=".pdf,.doc,.docx">
+                                    </div>
+                                </div>
+                                <div class="flex items-center space-x-2 mt-2">
+                                    <input type="checkbox" name="published" value="1" {{ $s && $s->published ? 'checked' : '' }} class="rounded border-gray-300">
+                                    <span class="text-xs text-gray-700">Tampilkan ke publik</span>
+                                </div>
+                                <div class="flex justify-end space-x-3 mt-4">
+                                    <button type="button" onclick="closeReportModal({{ $report->id }})" class="px-4 py-2 text-sm text-gray-600 hover:text-gray-800">Batal</button>
+                                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold py-2 px-4 rounded">Simpan</button>
+                                </div>
+                            </form>
+                            <form action="{{ route('sevens.destroy') }}" method="POST" class="mt-4 text-right" onsubmit="return confirm('Hapus laporan ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <input type="hidden" name="target" value="report">
+                                <input type="hidden" name="report_id" value="{{ $report->id }}">
+                                <button type="submit" class="text-xs text-red-600 hover:text-red-800">Hapus Laporan</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            @endif
+
             <script>
                 function openSevenSTextModal() {
                     var modal = document.getElementById('sevenSTextModal');
@@ -373,6 +411,42 @@
                 }
                 function closeSevenSTextModal() {
                     var modal = document.getElementById('sevenSTextModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                    }
+                }
+                function openSevenSChecklistModal() {
+                    var modal = document.getElementById('sevenSChecklistModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                    }
+                }
+                function closeSevenSChecklistModal() {
+                    var modal = document.getElementById('sevenSChecklistModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                    }
+                }
+                function openReportCreateModal() {
+                    var modal = document.getElementById('reportCreateModal');
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                    }
+                }
+                function closeReportCreateModal() {
+                    var modal = document.getElementById('reportCreateModal');
+                    if (modal) {
+                        modal.classList.add('hidden');
+                    }
+                }
+                function openReportModal(id) {
+                    var modal = document.getElementById('reportModal-' + id);
+                    if (modal) {
+                        modal.classList.remove('hidden');
+                    }
+                }
+                function closeReportModal(id) {
+                    var modal = document.getElementById('reportModal-' + id);
                     if (modal) {
                         modal.classList.add('hidden');
                     }
