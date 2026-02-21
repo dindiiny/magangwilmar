@@ -3,7 +3,7 @@
 @section('title', 'Kegiatan 7S - Wilmar Nabati Indonesia')
 
 @section('content')
-    <div class="max-w-7xl mx-auto space-y-6">
+    <div class="w-full mx-auto px-4 lg:px-8 space-y-6">
         <div class="bg-white rounded-lg shadow p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-2">Kegiatan 7S Laboratorium</h1>
             <p class="text-gray-600">
@@ -104,7 +104,7 @@
                 @endauth
             </div>
 
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-3">
                     <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Checklist 7S</h2>
