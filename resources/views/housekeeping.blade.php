@@ -109,7 +109,7 @@
     @auth
         @if(Auth::user()->is_admin)
             <div id="hkModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                <div class="bg-white rounded-lg w-full max-w-2xl mx-4 p-6 shadow-2xl relative">
+                <div class="bg-white rounded-lg w-full max-w-2xl mx-4 p-6 shadow-2xl relative max-h-[80vh] overflow-y-auto">
                     <button onclick="document.getElementById('hkModal').classList.add('hidden')" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>

@@ -127,7 +127,7 @@
                 @php
                     $s = isset($sevenS) && $sevenS ? $sevenS : null;
                 @endphp
-                <div class="max-h-72 overflow-y-auto pr-2">
+                <div class="pr-1">
                     <ul class="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-3 text-xs md:text-sm text-gray-700">
                         <li class="flex items-start space-x-2">
                             <input type="checkbox" {{ $s && $s->seiri ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
@@ -158,7 +158,6 @@
                             <span>{{ $s && $s->spirit_text ? $s->spirit_text : 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.' }}</span>
                         </li>
                     </ul>
-                </ul>
             </div>
 
             <div class="bg-white rounded-lg shadow p-6">
