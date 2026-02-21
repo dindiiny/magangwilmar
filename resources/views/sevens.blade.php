@@ -11,7 +11,7 @@
             </p>
         </div>
 
-        <div class="grid md:grid-cols-2 gap-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow p-6">
                 <div class="flex items-center justify-between mb-2">
                     <h2 class="font-semibold text-gray-800 text-sm uppercase tracking-wide">Progress Improvement</h2>
