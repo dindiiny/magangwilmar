@@ -273,15 +273,6 @@
         </div>
 
         <aside class="lg:col-span-1 space-y-4">
-            <div class="bg-white rounded-lg shadow p-4">
-                <h3 class="text-lg font-bold text-gray-800 mb-1">Kegiatan 7S Laboratorium</h3>
-                <p class="text-sm text-gray-600 mb-3">
-                    Ringkasan penerapan 7S di laboratorium dapat dilihat di halaman khusus.
-                </p>
-                <a href="{{ route('sevens') }}" class="inline-flex items-center text-sm text-emerald-700 hover:text-emerald-900 font-semibold">
-                    <i class="fas fa-list-check mr-2"></i> Buka Halaman Kegiatan 7S
-                </a>
-            </div>
         </aside>
     </div>
 

@@ -4,20 +4,11 @@
 
 @section('content')
     <div class="max-w-6xl mx-auto space-y-6">
-        <div class="bg-white rounded-lg shadow p-6 flex items-center justify-between">
-            <div>
-                <h1 class="text-2xl font-bold text-gray-800 mb-1">House Keeping Laboratorium</h1>
-                <p class="text-gray-600 text-sm">
-                    Jadwal rutin cleaning area laboratorium dan dokumentasi kegiatan House Keeping.
-                </p>
-            </div>
-            @auth
-                @if(Auth::user()->is_admin)
-                    <button onclick="document.getElementById('hkModal').classList.remove('hidden')" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold py-2 px-4 rounded shadow flex items-center">
-                        <i class="fas fa-edit mr-2"></i> Kelola House Keeping
-                    </button>
-                @endif
-            @endauth
+        <div class="bg-white rounded-lg shadow p-6">
+            <h1 class="text-2xl font-bold text-gray-800 mb-1">House Keeping Laboratorium</h1>
+            <p class="text-gray-600 text-sm">
+                Jadwal rutin cleaning area laboratorium dan dokumentasi kegiatan House Keeping.
+            </p>
         </div>
 
         <div class="bg-white rounded-lg shadow p-6">

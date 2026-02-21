@@ -99,7 +99,11 @@
                     </li>
                     <li class="flex items-start space-x-2">
                         <input type="checkbox" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>Safety &amp; Spirit – aspek keselamatan dan budaya kerja positif.</span>
+                        <span>Safety – aspek keselamatan di area kerja.</span>
+                    </li>
+                    <li class="flex items-start space-x-2">
+                        <input type="checkbox" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                        <span>Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.</span>
                     </li>
                 </ul>
             </div>
