@@ -103,6 +103,7 @@
                     @endif
                 @endauth
             </div>
+        </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div class="bg-white rounded-lg shadow p-6">
