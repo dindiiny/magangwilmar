@@ -158,6 +158,7 @@
                             <span>{{ $s && $s->spirit_text ? $s->spirit_text : 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.' }}</span>
                         </li>
                     </ul>
+                </div>
             </div>
 
             <div class="bg-white rounded-lg shadow p-6">
