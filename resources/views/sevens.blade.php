@@ -127,36 +127,38 @@
                 @php
                     $s = isset($sevenS) && $sevenS ? $sevenS : null;
                 @endphp
-                <ul class="grid sm:grid-cols-2 xl:grid-cols-3 gap-x-6 gap-y-3 text-xs md:text-sm text-gray-700">
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->seiri ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->seiri_text ? $s->seiri_text : 'Seiri (Sort) – pemilahan barang perlu dan tidak perlu.' }}</span>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->seiton ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->seiton_text ? $s->seiton_text : 'Seiton (Set in Order) – penataan peralatan dan bahan kerja.' }}</span>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->seiso ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->seiso_text ? $s->seiso_text : 'Seiso (Shine) – pembersihan rutin area kerja.' }}</span>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->seiketsu ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->seiketsu_text ? $s->seiketsu_text : 'Seiketsu (Standardize) – standarisasi tata letak dan label.' }}</span>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->shitsuke ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->shitsuke_text ? $s->shitsuke_text : 'Shitsuke (Sustain) – pembiasaan disiplin dan audit berkala.' }}</span>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->safety_text ? $s->safety_text : 'Safety – aspek keselamatan di area kerja.' }}</span>
-                    </li>
-                    <li class="flex items-start space-x-2">
-                        <input type="checkbox" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
-                        <span>{{ $s && $s->spirit_text ? $s->spirit_text : 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.' }}</span>
-                    </li>
-                </ul>
+                <div class="max-h-72 overflow-y-auto pr-2">
+                    <ul class="grid sm:grid-cols-2 gap-x-6 gap-y-3 text-xs md:text-sm text-gray-700">
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->seiri ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->seiri_text ? $s->seiri_text : 'Seiri (Sort) – pemilahan barang perlu dan tidak perlu.' }}</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->seiton ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->seiton_text ? $s->seiton_text : 'Seiton (Set in Order) – penataan peralatan dan bahan kerja.' }}</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->seiso ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->seiso_text ? $s->seiso_text : 'Seiso (Shine) – pembersihan rutin area kerja.' }}</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->seiketsu ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->seiketsu_text ? $s->seiketsu_text : 'Seiketsu (Standardize) – standarisasi tata letak dan label.' }}</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->shitsuke ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->shitsuke_text ? $s->shitsuke_text : 'Shitsuke (Sustain) – pembiasaan disiplin dan audit berkala.' }}</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->safety_text ? $s->safety_text : 'Safety – aspek keselamatan di area kerja.' }}</span>
+                        </li>
+                        <li class="flex items-start space-x-2">
+                            <input type="checkbox" {{ $s && $s->safety_spirit ? 'checked' : '' }} class="mt-0.5 text-emerald-600 rounded border-gray-300" disabled>
+                            <span>{{ $s && $s->spirit_text ? $s->spirit_text : 'Spirit – budaya kerja positif dan kepedulian terhadap lingkungan kerja.' }}</span>
+                        </li>
+                    </ul>
+                </div>
                 {{-- kelola checklist dipindah ke modal, tampilan di sini hanya display --}}
             </div>
 
@@ -210,8 +212,8 @@
 
     @auth
         @if(Auth::user()->is_admin)
-            <div id="sevenSTextModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                <div class="bg-white rounded-lg w-full max-w-xl mx-4 p-6 shadow-2xl relative">
+            <div id="sevenSTextModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
+                <div class="bg-white rounded-lg w-full max-w-xl mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
                     <button type="button" onclick="closeSevenSTextModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -258,8 +260,8 @@
                 </div>
             </div>
 
-            <div id="sevenSChecklistModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                <div class="bg-white rounded-lg w-full max-w-md mx-4 p-6 shadow-2xl relative">
+            <div id="sevenSChecklistModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
+                <div class="bg-white rounded-lg w-full max-w-md mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
                     <button type="button" onclick="closeSevenSChecklistModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -309,8 +311,8 @@
                 </div>
             </div>
 
-            <div id="reportCreateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                <div class="bg-white rounded-lg w-full max-w-xl mx-4 p-6 shadow-2xl relative">
+            <div id="reportCreateModal" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
+                <div class="bg-white rounded-lg w-full max-w-xl mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
                     <button type="button" onclick="closeReportCreateModal()" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                         <i class="fas fa-times text-xl"></i>
                     </button>
@@ -348,8 +350,8 @@
 
             @if(isset($reports) && $reports->count())
                 @foreach($reports as $report)
-                    <div id="reportModal-{{ $report->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center">
-                        <div class="bg-white rounded-lg w-full max-w-xl mx-4 p-6 shadow-2xl relative">
+                    <div id="reportModal-{{ $report->id }}" class="fixed inset-0 bg-black bg-opacity-50 hidden z-50 flex items-center justify-center overflow-y-auto">
+                        <div class="bg-white rounded-lg w-full max-w-xl mx-4 my-8 p-6 shadow-2xl relative max-h-screen overflow-y-auto">
                             <button type="button" onclick="closeReportModal({{ $report->id }})" class="absolute top-4 right-4 text-gray-500 hover:text-gray-700">
                                 <i class="fas fa-times text-xl"></i>
                             </button>
